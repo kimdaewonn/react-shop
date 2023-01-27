@@ -1,17 +1,27 @@
 import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Navbar, Container, Nav } from "react-bootstrap";
-import { Routes, Route, Link, useNavigate } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import "./App.css";
 import data from "./data.js";
 import Detail from "./pages/Detail";
+import axios from "axios";
 
 function App() {
-  let [shoes] = useState(data);
-  let navigage = useNavigate();
+  let [shoes, setShoes] = useState(data);
 
   return (
     <>
+      <div>
+        <Routes>
+          <Route path="/" element={<div>메인페이지</div>}></Route>
+          <Route path="/detail" element={<Detail shoes={shoes} />}></Route>
+        </Routes>
+        <Link style={{ paddingRight: "10px", paddingLeft: "650px" }} to="/">
+          홈
+        </Link>
+        <Link to="/detail">상세페이지</Link>
+      </div>
       <div className="App">
         <Navbar bg="dark" variant="dark">
           <Container>
@@ -19,19 +29,11 @@ function App() {
               Shop
             </Navbar.Brand>
             <Nav className="me-auto">
-              <Nav.Link href="#home">Home</Nav.Link>
-              <Nav.Link
-                onClick={() => {
-                  navigage("/detail");
-                }}
-                href="#features"
-              >
-                Cart
-              </Nav.Link>
+              <Nav.Link>Home</Nav.Link>
+              <Nav.Link>Cart</Nav.Link>
             </Nav>
           </Container>
         </Navbar>
-
         <div className="container">
           <div className="row">
             {shoes.map((a, i) => {
@@ -40,14 +42,22 @@ function App() {
           </div>
         </div>
       </div>
-      <Routes>
-        <Route path="/" element={<div>메인페이지</div>}></Route>
-        <Route path="/detail" element={<Detail shoes={shoes} />}></Route>
-      </Routes>
-      <Link style={{ paddingRight: "10px", paddingLeft: "650px" }} to="/">
-        홈
-      </Link>
-      <Link to="/detail">상세페이지</Link>
+      {/* <button
+        onClick={() => {
+          axios
+            .get("https://codingapple1.github.io/shop/data2.json")
+            .then((결과) => {
+              console.log(결과.data);
+              let copy = [...결과.data, ...shoes];
+              setShoes(copy);
+            })
+            .catch(() => {
+              console.log("실패함");
+            });
+        }}
+      >
+        버튼
+      </button> */}
     </>
   );
 }
