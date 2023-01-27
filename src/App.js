@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Navbar, Container, Nav } from "react-bootstrap";
 import { Routes, Route, Link } from "react-router-dom";
@@ -7,15 +7,25 @@ import data from "./data.js";
 import Detail from "./pages/Detail";
 import axios from "axios";
 
+export let Context1 = React.createContext();
+
 function App() {
   let [shoes, setShoes] = useState(data);
+  let [재고, 재고변경] = useState([10, 11, 12]);
 
   return (
     <>
       <div>
         <Routes>
           <Route path="/" element={<div>메인페이지</div>}></Route>
-          <Route path="/detail" element={<Detail shoes={shoes} />}></Route>
+          <Route
+            path="/detail"
+            element={
+              <Context1.Provider value={{ 재고, shoes }}>
+                <Detail shoes={shoes} />
+              </Context1.Provider>
+            }
+          ></Route>
         </Routes>
         <Link style={{ paddingRight: "10px", paddingLeft: "650px" }} to="/">
           홈
@@ -42,13 +52,12 @@ function App() {
           </div>
         </div>
       </div>
-      {/* <button
+      <button
         onClick={() => {
           axios
             .get("https://codingapple1.github.io/shop/data2.json")
             .then((결과) => {
-              console.log(결과.data);
-              let copy = [...결과.data, ...shoes];
+              let copy = [...shoes, ...결과.data];
               setShoes(copy);
             })
             .catch(() => {
@@ -56,8 +65,8 @@ function App() {
             });
         }}
       >
-        버튼
-      </button> */}
+        추가버튼
+      </button>
     </>
   );
 }
